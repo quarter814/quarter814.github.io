@@ -1,96 +1,197 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!doctype html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<script language="javascript">
-// opener관련 오류가 발생하는 경우 아래 주석을 해지하고, 사용자의 도메인정보를 입력합니다. ("팝업API 호출 소스"도 동일하게 적용시켜야 합니다.)
-//document.domain = "abc.go.kr";
+	<title>Young's Homepage</title>
+	<style>
+	body{
+		background-image:url('background.jpg');
+		background-repeat: no-repeat;
+		background-size: 1550px 1200px;
+	}
+	#header{
+		text-align: center;
+	}
+	#menu{
+		word-spacing:10px;
+		text-align: center;
+	}
+	.menuitem{
+		margin:20px;
+		display:inline;
+	}
+	a:link{color:black;}
+	a:visited{color:black;}
+	#contentabout{
+		margin:25px;
+		float:left;
+		text-align:left;
+		clear:both;
+	}
+	#aboutbox{
+		background-color:white;
+		border:1px solid black;
+		width: 660px;
+		height:150px;
+	}
+	.aboutli{
+		text-align:left;
+	}
+	#contentcomment{
+		text-align:left;
+		margin:25px 25px 0px 20px;
+		float:right;
+	}
+	#onlytable{
+		background-color:white;
+	}
+	#contenttimetable{
+		margin:25px;
+		float:left;
+		clear: both;
+	}
 
-function goPopup(){
-	// 주소검색을 수행할 팝업 페이지를 호출합니다.
-	// 호출된 페이지(jusopopup.jsp)에서 실제 주소검색URL(https://www.juso.go.kr/addrlink/addrLinkUrl.do)를 호출하게 됩니다.
-	var pop = window.open("jusoPopup.html","pop","width=570,height=420, scrollbars=yes, resizable=yes"); 
-	
-	// 모바일 웹인 경우, 호출된 페이지(jusopopup.jsp)에서 실제 주소검색URL(https://www.juso.go.kr/addrlink/addrMobileLinkUrl.do)를 호출하게 됩니다.
-    //var pop = window.open("/popup/jusoPopup.jsp","pop","scrollbars=yes, resizable=yes"); 
-}
-
-
-function jusoCallBack(roadFullAddr,roadAddrPart1,addrDetail,roadAddrPart2,engAddr, jibunAddr, zipNo, admCd, rnMgtSn, bdMgtSn,detBdNmList,bdNm,bdKdcd,siNm,sggNm,emdNm,liNm,rn,udrtYn,buldMnnm,buldSlno,mtYn,lnbrMnnm,lnbrSlno,emdNo){
-		// 팝업페이지에서 주소입력한 정보를 받아서, 현 페이지에 정보를 등록합니다.
-		document.form.roadFullAddr.value = roadFullAddr;
-		document.form.roadAddrPart1.value = roadAddrPart1;
-		document.form.roadAddrPart2.value = roadAddrPart2;
-		document.form.addrDetail.value = addrDetail;
-		document.form.engAddr.value = engAddr;
-		document.form.jibunAddr.value = jibunAddr;
-		document.form.zipNo.value = zipNo;
-		document.form.admCd.value = admCd;
-		document.form.rnMgtSn.value = rnMgtSn;
-		document.form.bdMgtSn.value = bdMgtSn;
-		document.form.detBdNmList.value = detBdNmList;
-		/** 2017년 2월 추가제공 **/
-		document.form.bdNm.value = bdNm;
-		document.form.bdKdcd.value = bdKdcd;
-		document.form.siNm.value = siNm;
-		document.form.sggNm.value = sggNm;
-		document.form.emdNm.value = emdNm;
-		document.form.liNm.value = liNm;
-		document.form.rn.value = rn;
-		document.form.udrtYn.value = udrtYn;
-		document.form.buldMnnm.value = buldMnnm;
-		document.form.buldSlno.value = buldSlno;
-		document.form.mtYn.value = mtYn;
-		document.form.lnbrMnnm.value = lnbrMnnm;
-		document.form.lnbrSlno.value = lnbrSlno;
-		/** 2017년 3월 추가제공 **/
-		document.form.emdNo.value = emdNo;
-		
-}
-
-</script>
-<title>주소 입력 샘플</title>
+	#contentnotice{
+		margin:25px 25px 0px 20px;
+		float:right;
+	}
+	#noticebox{
+		background-color:white;
+		border:1px solid black;	
+		width:700px;
+		height:275px;
+		overflow:auto;
+	}
+	th{
+		background-color:rgb(20,200,0);
+	}
+	</style>
 </head>
-<body>
-<form name="form" id="form" method="post">
 
-	<input type="button" onClick="goPopup();" value="팝업_domainChk"/>
-	<div id="list"></div>
-	<div id="callBackDiv">
-		<table>
-			<tr><td>도로명주소 전체(포멧)</td><td><input type="text"  style="width:500px;" id="roadFullAddr"  name="roadFullAddr" /></td></tr>
-			<tr><td>도로명주소           </td><td><input type="text"  style="width:500px;" id="roadAddrPart1"  name="roadAddrPart1" /></td></tr>
-			<tr><td>고객입력 상세주소    </td><td><input type="text"  style="width:500px;" id="addrDetail"  name="addrDetail" /></td></tr>
-			<tr><td>참고주소             </td><td><input type="text"  style="width:500px;" id="roadAddrPart2"  name="roadAddrPart2" /></td></tr>
-			<tr><td>영문 도로명주소      </td><td><input type="text"  style="width:500px;" id="engAddr"  name="engAddr" /></td></tr>
-			<tr><td>지번                 </td><td><input type="text"  style="width:500px;" id="jibunAddr"  name="jibunAddr" /></td></tr>
-			<tr><td>우편번호             </td><td><input type="text"  style="width:500px;" id="zipNo"  name="zipNo" /></td></tr>
-			<tr><td>행정구역코드        </td><td><input type="text"  style="width:500px;" id="admCd"  name="admCd" /></td></tr>
-			<tr><td>도로명코드          </td><td><input type="text"  style="width:500px;" id="rnMgtSn"  name="rnMgtSn" /></td></tr>
-			<tr><td>건물관리번호        </td><td><input type="text"  style="width:500px;" id="bdMgtSn"  name="bdMgtSn" /></td></tr>
-			<tr><td>상세번물명        	</td><td><input type="text"  style="width:500px;" id="detBdNmList"  name="detBdNmList" /></td></tr>
-			<tr><td>건물명        		</td><td><input type="text"  style="width:500px;" id="bdNm"  name="bdNm" /></td></tr>
-			<tr><td>공동주택여부       </td><td><input type="text"  style="width:500px;" id="bdKdcd"  name="bdKdcd" /></td></tr>
-			<tr><td>시도명        		</td><td><input type="text"  style="width:500px;" id="siNm"  name="siNm" /></td></tr>
-			<tr><td>시군구명        	</td><td><input type="text"  style="width:500px;" id="sggNm"  name="sggNm" /></td></tr>
-			<tr><td>읍면동명        	</td><td><input type="text"  style="width:500px;" id="emdNm"  name="emdNm" /></td></tr>
-			<tr><td>법정리명        	</td><td><input type="text"  style="width:500px;" id="liNm"  name="liNm" /></td></tr>
-			<tr><td>도로명        		</td><td><input type="text"  style="width:500px;" id="rn"  name="rn" /></td></tr>
-			<tr><td>지하여부        	</td><td><input type="text"  style="width:500px;" id="udrtYn"  name="udrtYn" /></td></tr>
-			<tr><td>건물본번        	</td><td><input type="text"  style="width:500px;" id="buldMnnm"  name="buldMnnm" /></td></tr>
-			<tr><td>건물부번        	</td><td><input type="text"  style="width:500px;" id="buldSlno"  name="buldSlno" /></td></tr>
-			<tr><td>산여부        		</td><td><input type="text"  style="width:500px;" id="mtYn"  name="mtYn" /></td></tr>
-			<tr><td>지번본번(번지)     </td><td><input type="text"  style="width:500px;" id="lnbrMnnm"  name="lnbrMnnm" /></td></tr>
-			<tr><td>지번부번(호)       </td><td><input type="text"  style="width:500px;" id="lnbrSlno"  name="lnbrSlno" /></td></tr>
-			<tr><td>읍면동일련번호       </td><td><input type="text"  style="width:500px;" id="emdNo"  name="emdNo" /></td></tr>
-		</table>
+<body>
+	<div id='header'><h2>Young's Homepage</h2></div>
+	<hr/>
+	<div id='menu'>
+		<a href="#contentabout" target="_self"><div id='about' class='menuitem'>ABOUT</div></a>
+		<a href="Cooking.html" target="_blank"><div id='cook' class='menuitem'>COOKING</div></a>
+		<a href="MyFavoriteMovie.html" target="_blank"><div id='movie' class='menuitem'>MOVIE</div></a>
+		<a href="#contenttimetable" target="_self"><div id='timetable' class='menuitem'>TIME TABLE</div></a>
+		<a href="#contentnotice" target="_self"><div id='notice' class='menuitem'>NOTICE</div></a>
+		<a href="#contentcomment" target="_self"><div id='comment' class='menuitem'>COMMENT</div></a>
+	<div>
+	<hr/>
+
+	<div id='contentabout'>
+	<h3 >About</h3>
+	<ul id='aboutbox'>
+		<li class='aboutli'>Cooking : 요리 재료정보와 레시피</li>
+		<li class='aboutli'>Movie : 내가 좋아하는 영화 정보</li>
+		<li class='aboutli'>Game : 내가 좋아하는 게임 정보</li>
+		<li class='aboutli'>Time Table : 이번 학기 시간표</li>
+		<li class='aboutli'>Notice : 공지사항</li>
+		<li class='aboutli'>Comment : 댓글</li>
+	</ul>	
+	</div>
+	
+	<div id='contentcomment'>
+	<h3>Comment</h3>
+	<form>
+	<textarea rows="10" cols="70">
+	</textarea>
+	<input type="submit" value="제출하기" />
+	<input type="reset" value="다시쓰기" />
+	</form>
+	</div>
+	
+	<div id='contenttimetable'>
+	<h3 >Time Table</h3>
+	<table id='onlytable' border="1">
+		<tr>
+			<th></th>
+			<th>월요일</th>
+			<th>화요일</th>
+			<th>수요일</th>
+			<th>목요일</th>
+			<th>금요일</th>
+		</tr>
+		<tr>
+			<td>9:00~10:15</td>
+			<td></td>
+			<td style="background-color:yellow;">정보보호개론</td>
+			<td></td>
+			<td style="background-color:yellow;">공학수치해석</td>
+			<td></td>			
+		</tr>
+		<tr>
+			<td>10:30~11:45</td>
+			<td></td>
+			<td style="background-color:yellow;">공학수치해석</td>
+			<td></td>
+			<td style="background-color:yellow;">정보보호개론</td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>12:00~13:15</td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>	
+		</tr>
+		<tr>
+			<td>13:30~14:45</td>		
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+		</tr>
+		<tr>
+			<td>15:00~16:15</td>
+			<td></td>
+			<td style="background-color:yellow;">컴퓨터네트웍개론</td>
+			<td style="background-color:yellow;">문제해결기법</td>
+			<td></td>
+			<td style="background-color:yellow;">마이크로프로세서</td>
+		</tr>
+		<tr>
+			<td>16:30~17:45</td>
+			<td style="background-color:yellow;">문제해결기법</td>
+			<td></td>
+			<td></td>
+			<td style="background-color:yellow;">컴퓨터네트웍개론</td>
+			<td style="background-color:yellow;">마이크로프로세서</td>
+		</tr>
+		<tr>
+			<td>18:00~19:15</td>
+			<td></td>
+			<td style="background-color:yellow;">웹프로그래밍실습</td>
+			<td></td>
+			<td></td>
+			<td></td>		
+		</tr>
+		<tr>
+			<td>19:30~20:45</td>
+			<td></td>
+			<td style="background-color:yellow;">웹프로그래밍실습</td>
+			<td></td>
+			<td></td>
+			<td></td>		
+		</tr>
+		<tr>
+			<td>21:00~21:45</td>
+			<td></td>
+			<td style="background-color:yellow;">웹프로그래밍실습</td>
+			<td></td>
+			<td></td>
+			<td></td>		
+		</tr>
+	</table>
 	</div>
 
-</form>
+	<div id='contentnotice'>
+	<h3 >Notice</h3>
+	<p id='noticebox'>오늘의 공지입니다.</p>
+	</div>
+		
 </body>
 </html>
-
-
-
